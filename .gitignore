@@ -1,0 +1,48 @@
+# =====================================================================
+#  DATA — NEVER COMMIT. MLS/CRMLS data is confidential & licensed.
+#  Code only goes to GitHub. (See README data-privacy notice.)
+# =====================================================================
+
+# Entire data directory (raw, processed, metadata)
+data/
+
+# Belt-and-suspenders: block data file types anywhere in the repo
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.parquet
+*.pdf
+*.sql
+*.db
+*.sqlite
+
+# Trained model binaries / serialized objects
+*.pkl
+*.pickle
+*.joblib
+models/
+
+# Generated analysis outputs (may contain row-level data)
+outputs/
+*.twbx
+*.hyper
+
+# ---------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# ---------------------------------------------------------------------
+# OS / editor
+# ---------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

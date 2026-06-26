@@ -1,0 +1,14 @@
+# Core analysis
+pandas>=2.0
+numpy>=1.24
+
+# Notebooks
+jupyter
+ipykernel
+
+# Exploration plots (EDA only; final visuals are in Tableau)
+matplotlib>=3.7
+seaborn>=0.12
+
+# Reading the Trestle metadata PDF (optional)
+pdfplumber
