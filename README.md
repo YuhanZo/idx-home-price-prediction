@@ -1,74 +1,78 @@
-# California Property Price Prediction
+# CRMLS Housing Market Analytics
 
-Predicting California residential property sale prices from CRMLS sold-listing data.
+End-to-end analytics pipeline that turns monthly **California Regional MLS (CRMLS)**
+sold-transaction data into housing-market insights and interactive **Tableau** dashboards.
 
-## ⚠️ Data Privacy — Read Before Committing
+Built as part of the IDX Exchange Data Analyst program: ingest raw MLS exports →
+clean & validate → engineer market metrics → visualize → report.
 
-**Do NOT upload any raw SQL, CSV, or other data files to your public GitHub.**
-Commit **only your code**.
+## What it does
 
-- ❌ No raw data (`data/raw/`, `data/processed/`, `*.csv`)
-- ❌ No SQL dumps or query exports (`*.sql`)
-- ❌ No proprietary metadata (`data/metadata/`)
-- ❌ No trained model binaries (`*.pkl`) or generated outputs
-- ✅ Yes to source code (`src/`), notebooks (cleared of data/output), and docs
+- **Ingests** monthly `CRMLSSold` CSV exports (Dec 2025 – May 2026, ~124K transactions).
+- **Filters & validates** to residential sale records (~83K rows) with data-quality checks.
+- **Engineers market metrics** used across the dashboards:
+  - **Price per Sq Ft** — `ClosePrice / LivingArea`
+  - **Sold-to-List Ratio** — `ClosePrice / OriginalListPrice` (negotiation strength)
+  - **Days on Market** — time-to-sell
+  - **Year / Month / YrMo** — time-series dimensions from `CloseDate`
+- **Removes outliers** with the IQR method so medians/averages stay representative.
+- **Visualizes** four Tableau dashboards: Market Trends, Market Activity,
+  Competitive Intelligence (agents & brokerages), and Geographic Analysis.
 
-The CRMLS / Trestle data is licensed and may contain sensitive or proprietary
-information. Sharing it publicly can violate the data license and privacy rules.
-Keep it local, or store it in a **private** location only.
+## Tech stack
 
-## Project Structure
+`Python` · `pandas` · `Jupyter` · `Tableau Public`
+
+## Project structure
 
 ```
-California-Property-Price-Prediction/
-├── data/
-│   ├── raw/          # original CRMLS sold CSVs        (DO NOT COMMIT)
-│   ├── metadata/     # Trestle property metadata PDF   (DO NOT COMMIT)
-│   └── processed/    # cleaned / filtered datasets      (DO NOT COMMIT)
-├── notebooks/        # exploration, preprocessing, modeling
-├── src/              # reusable Python modules
-├── models/           # trained model artifacts          (DO NOT COMMIT)
-├── outputs/          # figures, metrics, predictions     (DO NOT COMMIT)
-├── presentation/     # slides and demo material
-├── report/           # written documentation
+.
+├── data/                 # local only — never committed (see CLAUDE.md)
+│   ├── raw/              # monthly CRMLSSold CSV exports
+│   ├── metadata/         # Trestle field metadata
+│   └── processed/        # cleaned/engineered datasets
+├── notebooks/
+│   └── 01_data_exploration.ipynb
+├── src/
+│   ├── config.py         # central path configuration
+│   └── load_data.py      # load + concatenate monthly files
+├── outputs/              # figures (local only)
+├── report/               # market-intelligence report
 ├── requirements.txt
 └── README.md
 ```
 
-## Setup
+## Getting started
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Workflow
+Place the monthly `CRMLSSold*.csv` files in `data/raw/`, then run the notebook
+or use the `src/` modules:
 
-1. Place raw CRMLS CSVs in `data/raw/` (kept local only).
-2. Run the notebooks in order: `01_data_exploration` → `02_preprocessing` → `03_model`.
-3. Or use the `src/` modules: `load_data` → `preprocess` → `feature_engineering` → `train` → `evaluate` → `predict`.
-
-## Suggested `.gitignore`
-
-Add this file before your first commit so data never leaves your machine:
-
-```gitignore
-# Data
-data/raw/
-data/processed/
-data/metadata/
-*.csv
-*.sql
-
-# Models & outputs
-models/
-*.pkl
-outputs/
-
-# Environments
-.venv/
-__pycache__/
-*.pyc
-.ipynb_checkpoints/
+```python
+from src.load_data import load_all
+sold = load_all()          # all months concatenated, tagged with SourceMonth
 ```
+
+## Pipeline status
+
+| Stage | Status |
+|-------|--------|
+| Dataset exploration | Done |
+| Monthly aggregation | Planned |
+| Structuring & validation | Planned |
+| Cleaning | Planned |
+| Feature engineering | Planned |
+| Outlier detection (IQR) | Planned |
+| Tableau dashboards | Planned |
+| Market-intelligence report | Planned |
+
+## Data note
+
+The underlying MLS data is licensed and confidential, so **no data files are
+included in this repository** — only code. See `CLAUDE.md` for the data-handling
+rules this project follows.
